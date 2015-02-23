@@ -1,0 +1,39 @@
+{
+	"name": "estvoyage/csv",
+	"type": "library",
+	"description": "An east-oriented csv generator",
+	"keywords": [ "CSV", "Comma-Separated Values", "East" ],
+	"homepage": "http://github.com/estvoyage/csv",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Frédéric Hardy",
+			"email": "frederic.hardy@mageekbox.net",
+			"homepage": "http://blog.mageekbox.net"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+		"estvoyage/value": "@dev",
+		"estvoyage/data": "@dev"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/mageekguy/atoum.git"
+		}
+	],
+	"require-dev": {
+		"mageekguy/atoum": "@dev"
+	},
+	"autoload": {
+		"psr-4": {
+			"estvoyage\\csv\\": "classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"estvoyage\\csv\\tests\\units\\": "tests/units"
+		}
+	}
+}
