@@ -40,7 +40,7 @@ class rfc4180 extends units\test
 
 			->if(
 				$this->calling($provider)->useCsvGenerator = function($csvGenerator) {
-					$csvGenerator->newCsvRecord(new csv\record(new csv\data('a'), new csv\data('b')));
+					$csvGenerator->newCsvRecord(new csv\record(new data\data('a'), new data\data('b')));
 				}
 			)
 			->then
@@ -50,8 +50,8 @@ class rfc4180 extends units\test
 			->if(
 				$this->calling($provider)->useCsvGenerator = function($csvGenerator) {
 					$csvGenerator
-						->newCsvRecord(new csv\record(new csv\data('c'), new csv\data('d')))
-						->newCsvRecord(new csv\record(new csv\data('e'), new csv\data('f')))
+						->newCsvRecord(new csv\record(new data\data('c'), new data\data('d')))
+						->newCsvRecord(new csv\record(new data\data('e'), new data\data('f')))
 					;
 				}
 			)
@@ -66,8 +66,8 @@ class rfc4180 extends units\test
 				$this->calling($provider)->useCsvGenerator = function($csvGenerator) {
 					$csvGenerator
 						->newCsvRecords(
-							new csv\record(new csv\data('g'), new csv\data('h')),
-							new csv\record(new csv\data('i'), new csv\data('j'))
+							new csv\record(new data\data('g'), new data\data('h')),
+							new csv\record(new data\data('i'), new data\data('j'))
 						)
 					;
 				}
@@ -81,7 +81,7 @@ class rfc4180 extends units\test
 			->if(
 				$this->calling($provider)->useCsvGenerator = function($csvGenerator) {
 					$csvGenerator
-						->newCsvRecord(new csv\record(new csv\data('k,"l'), new csv\data('m,n'), new csv\data('o' . "\r\n" . 'p')));
+						->newCsvRecord(new csv\record(new data\data('k,"l'), new data\data('m,n'), new data\data('o' . "\r\n" . 'p')));
 					;
 				}
 			)

@@ -2,13 +2,17 @@
 
 namespace estvoyage\csv;
 
+use
+	estvoyage\data
+;
+
 final class record
 {
 	private
 		$data = []
 	;
 
-	function __construct(data $firstData, data... $data)
+	function __construct(data\data $firstData, data\data... $data)
 	{
 		array_unshift($data, $firstData);
 
@@ -43,6 +47,6 @@ final class record
 			$data[] = $textdata;
 		}
 
-		return new \estvoyage\data\data(join($separator, $data) . $eol);
+		return new data\data(join($separator, $data) . $eol);
 	}
 }
