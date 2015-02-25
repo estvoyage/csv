@@ -15,16 +15,14 @@ abstract class generic implements csv\generator
 		$dataConsumer,
 		$separator,
 		$eol,
-		$escaper,
-		$recordMaxSize
+		$escaper
 	;
 
-	function __construct(separator $separator, eol $eol, escaper $escaper, record\maxSize $recordMaxSize = null)
+	function __construct(separator $separator, eol $eol, escaper $escaper)
 	{
 		$this->separator = $separator;
 		$this->eol = $eol;
 		$this->escaper = $escaper;
-		$this->recordMaxSize = $recordMaxSize;
 	}
 
 	function forwardRecordFromProviderToDataConsumer(csv\record\provider $provider, data\consumer $dataConsumer)
@@ -36,19 +34,6 @@ abstract class generic implements csv\generator
 		;
 
 		return $this;
-	}
-
-	function maxRecordSizeIs(record\maxSize $maxSize)
-	{
-		return $this->ifConsumer(function() use ($maxSize) {
-				if ($this->recordMaxSize)
-				{
-					throw new exception\logic('Maximum record size is already defined');
-				}
-
-				$this->recordMaxSize = $maxSize;
-			}
-		);
 	}
 
 	function newCsvRecord(csv\record $record)
