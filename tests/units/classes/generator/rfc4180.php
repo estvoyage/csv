@@ -22,6 +22,54 @@ class rfc4180 extends units\test
 		;
 	}
 
+	function testMaxRecordSizeIs()
+	{
+		$this
+			->given(
+				$maxRecordSize = new csv\record\maxSize(rand(1, PHP_INT_MAX))
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->exception(function() use ($maxRecordSize) { $this->testedInstance->maxRecordSizeIs($maxRecordSize); })
+					->isInstanceOf('estvoyage\csv\exception\logic')
+					->hasMessage('Consumer is undefined')
+		;
+	}
+
+	function testNewCsvRecord()
+	{
+		$this
+			->given(
+				$record = new csv\record(new data\data('a'), new data\data('b'))
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->exception(function() use ($record) { $this->testedInstance->newCsvRecord($record); })
+					->isInstanceOf('estvoyage\csv\exception\logic')
+					->hasMessage('Consumer is undefined')
+		;
+	}
+
+	function testNewCsvRecords()
+	{
+		$this
+			->given(
+				$record = new csv\record(new data\data('a'), new data\data('b'))
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->exception(function() use ($record) { $this->testedInstance->newCsvRecords($record); })
+					->isInstanceOf('estvoyage\csv\exception\logic')
+					->hasMessage('Consumer is undefined')
+		;
+	}
+
 	function testForwardRecordFromProvideToDataConsumer()
 	{
 		$this
