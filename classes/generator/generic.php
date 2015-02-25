@@ -12,7 +12,7 @@ use
 abstract class generic implements csv\generator
 {
 	private
-		$consumer,
+		$dataConsumer,
 		$separator,
 		$eol,
 		$escaper,
@@ -27,13 +27,13 @@ abstract class generic implements csv\generator
 		$this->recordMaxSize = $recordMaxSize;
 	}
 
-	function forwardRecordFromProviderToDataConsumer(csv\record\provider $provider, data\consumer $consumer)
+	function forwardRecordFromProviderToDataConsumer(csv\record\provider $provider, data\consumer $dataConsumer)
 	{
-		$generator = $this->prepareToReceiveRecords();
-
-		$generator->consumer = $consumer;
-
-		$provider->useCsvGenerator($generator);
+		$this
+			->prepareToReceiveRecords()
+			->setConsumer($dataConsumer)
+			->notifyRecordProvider($provider)
+		;
 
 		return $this;
 	}
@@ -75,7 +75,7 @@ abstract class generic implements csv\generator
 
 				if ($data)
 				{
-					$this->consumer->newData(new data\data($data));
+					$this->dataConsumer->newData(new data\data($data));
 				}
 			}
 		);
@@ -83,12 +83,26 @@ abstract class generic implements csv\generator
 
 	private function ifConsumer(callable $callable)
 	{
-		if ($this->consumer === null)
+		if ($this->dataConsumer === null)
 		{
 			throw new exception\logic('Consumer is undefined');
 		}
 
 		$callable();
+
+		return $this;
+	}
+
+	private function setConsumer(data\consumer $dataConsumer)
+	{
+		$this->dataConsumer = $dataConsumer;
+
+		return $this;
+	}
+
+	private function notifyRecordProvider(csv\record\provider $provider)
+	{
+		$provider->useCsvGenerator($this);
 
 		return $this;
 	}
