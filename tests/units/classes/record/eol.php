@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\csv\tests\units\generator;
+namespace estvoyage\csv\tests\units\record;
 
 require __DIR__ . '/../../runner.php';
 
@@ -16,6 +16,11 @@ class eol extends units\test
 			->isFinal
 			->extends('estvoyage\value\string')
 		;
+	}
+
+	function testConstructorWithoutArgument()
+	{
+		$this->castToString($this->newTestedInstance)->isEqualTo("\r\n");
 	}
 
 	/**

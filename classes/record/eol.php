@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\csv\generator;
+namespace estvoyage\csv\record;
 
 use
 	estvoyage\csv
@@ -8,7 +8,7 @@ use
 
 final class eol extends \estvoyage\value\string
 {
-	function __construct($value)
+	function __construct($value = "\r\n")
 	{
 		try
 		{

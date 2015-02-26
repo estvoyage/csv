@@ -8,7 +8,5 @@ use
 
 interface generator
 {
-	function forwardRecordFromProviderToDataConsumer(record\provider $provider, data\consumer $consumer);
-	function newCsvRecord(record $record);
-	function newCsvRecords(record... $records);
+	function dataConsumerNeedCsvRecord(data\consumer $dataConsumer, record $record);
 }

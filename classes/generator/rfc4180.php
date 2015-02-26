@@ -3,6 +3,7 @@
 namespace estvoyage\csv\generator;
 
 use
+	estvoyage\csv\record,
 	estvoyage\csv\generator
 ;
 
@@ -17,14 +18,9 @@ final class rfc4180 extends generator\generic
 	function __construct()
 	{
 		parent::__construct(
-			self::$separator ?: (self::$separator = new generator\separator(',')),
-			self::$eol ?: (self::$eol = new generator\eol("\r\n")),
-			self::$escaper ?: (self::$escaper = new generator\escaper('"'))
+			self::$separator ?: (self::$separator = new record\separator),
+			self::$eol ?: (self::$eol = new record\eol),
+			self::$escaper ?: (self::$escaper = new record\escaper)
 		);
-	}
-
-	function prepareToReceiveRecords()
-	{
-		return new self;
 	}
 }

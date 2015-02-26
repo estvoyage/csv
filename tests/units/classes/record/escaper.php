@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\csv\tests\units\generator;
+namespace estvoyage\csv\tests\units\record;
 
 require __DIR__ . '/../../runner.php';
 
@@ -8,7 +8,7 @@ use
 	estvoyage\csv\tests\units
 ;
 
-class separator extends units\test
+class escaper extends units\test
 {
 	function testClass()
 	{
@@ -18,6 +18,11 @@ class separator extends units\test
 		;
 	}
 
+	function testConstructorWithoutArgument()
+	{
+		$this->castToString($this->newTestedInstance)->isEqualTo('"');
+	}
+
 	/**
 	 * @dataProvider invalidValueProvider
 	 */
@@ -25,7 +30,7 @@ class separator extends units\test
 	{
 		$this->exception(function() use ($invalidValue) { $this->newTestedInstance($invalidValue); })
 			->isInstanceOf('estvoyage\csv\exception\domain')
-			->hasMessage('Separator should be a string')
+			->hasMessage('Escaper should be a string')
 		;
 	}
 
