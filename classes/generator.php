@@ -6,7 +6,7 @@ use
 	estvoyage\data
 ;
 
-interface generator
+interface generator extends data\provider
 {
-	function dataConsumerNeedCsvRecord(data\consumer $dataConsumer, record $record);
+	function newCsvRecord(record $record);
 }

@@ -3,6 +3,7 @@
 namespace estvoyage\csv\generator;
 
 use
+	estvoyage\data,
 	estvoyage\csv\record,
 	estvoyage\csv\generator
 ;
@@ -15,12 +16,18 @@ final class rfc4180 extends generator\generic
 		$escaper
 	;
 
-	function __construct()
+	function __construct(data\consumer $dataConsumer = null)
 	{
 		parent::__construct(
 			self::$separator ?: (self::$separator = new record\separator),
 			self::$eol ?: (self::$eol = new record\eol),
-			self::$escaper ?: (self::$escaper = new record\escaper)
+			self::$escaper ?: (self::$escaper = new record\escaper),
+			$dataConsumer
 		);
+	}
+
+	function dataConsumerIs(data\consumer $dataConsumer)
+	{
+		return new self($dataConsumer);
 	}
 }
