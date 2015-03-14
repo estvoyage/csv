@@ -8,7 +8,7 @@ use
 	estvoyage\csv\record
 ;
 
-final class line implements csv\record
+final class line implements csv\record, data\provider
 {
 	private
 		$data = [],

@@ -18,6 +18,7 @@ class line extends units\test
 		$this->testedClass
 			->isFinal
 			->implements('estvoyage\csv\record')
+			->implements('estvoyage\data\provider')
 		;
 	}
 
