@@ -22,6 +22,35 @@ class line extends units\test
 		;
 	}
 
+	function testNewData()
+	{
+		$this
+			->given(
+				$data = new data\data,
+				$separator = new csv\record\separator(uniqid()),
+				$escaper = new csv\record\escaper(uniqid()),
+				$eol = new csv\record\eol(uniqid())
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->newData($data))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance($data))
+
+				->object(
+					$this->newTestedInstance($data)
+						->useSeparatorAndEolAndEscaper($separator, $eol, $escaper)
+							->newData($data)
+				)
+					->isEqualTo(
+						$this->newTestedInstance($data, $data)
+							->useSeparatorAndEolAndEscaper($separator, $eol, $escaper)
+					)
+		;
+	}
+
 	function testUseSeparatorAndEolAndEscaper()
 	{
 		$this

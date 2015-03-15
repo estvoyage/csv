@@ -17,18 +17,30 @@ final class line implements csv\record, data\provider
 		$eol
 	;
 
+	private static
+		$defaultSeparator,
+		$defaultEscaper,
+		$defaultEol
+	;
+
 	function __construct(data\data... $data)
 	{
 		$this->data = $data;
-		$this->separator = new record\separator;
-		$this->escaper = new record\escaper;
-		$this->eol = new record\eol;
+		$this->separator = self::$defaultSeparator ?: (self::$defaultSeparator = new record\separator);
+		$this->escaper = self::$defaultEscaper ?: (self::$defaultEscaper = new record\escaper);
+		$this->eol = self::$defaultEol ?: (self::$defaultEol = new record\eol);
+	}
+
+	function newData(data\data $data)
+	{
+		$line = clone $this;
+		$line->data[] = $data;
+
+		return $line;
 	}
 
 	function useSeparatorAndEolAndEscaper(record\separator $separator, record\eol $eol, record\escaper $escaper)
 	{
-		$record = $this;
-
 		switch (true)
 		{
 			case $separator != $this->separator:
@@ -39,10 +51,12 @@ final class line implements csv\record, data\provider
 				$record->separator = $separator;
 				$record->eol = $eol;
 				$record->escaper = $eol;
-				break;
-		}
 
-		return $record;
+				return $record;
+
+			default:
+				return $this;
+		}
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
