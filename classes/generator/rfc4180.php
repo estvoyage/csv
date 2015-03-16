@@ -16,18 +16,12 @@ final class rfc4180 extends generator\generic
 		$escaper
 	;
 
-	function __construct(data\consumer $dataConsumer = null)
+	function __construct()
 	{
 		parent::__construct(
 			self::$separator ?: (self::$separator = new record\separator),
 			self::$eol ?: (self::$eol = new record\eol),
-			self::$escaper ?: (self::$escaper = new record\escaper),
-			$dataConsumer
+			self::$escaper ?: (self::$escaper = new record\escaper)
 		);
-	}
-
-	function dataConsumerIs(data\consumer $dataConsumer)
-	{
-		return new self($dataConsumer);
 	}
 }

@@ -22,11 +22,6 @@ class rfc4180 extends units\test
 		;
 	}
 
-	function testConstructor()
-	{
-		$this->object($this->newTestedInstance)->isEqualTo($this->newTestedInstance->dataConsumerIs(new data\consumer\blackhole));
-	}
-
 	function testDataConsumerIs()
 	{
 		$this
@@ -38,8 +33,21 @@ class rfc4180 extends units\test
 			)
 			->then
 				->object($this->testedInstance->dataConsumerIs($dataConsumer))
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
+					->isTestedInstance
+				->mock($dataConsumer)
+					->didNotReceiveAnyMessage()
+
+			->given(
+				$this->calling($record = new csv\record)->useSeparatorAndEolAndEscaper = $record
+			)
+			->if(
+				$this->testedInstance->newCsvRecord($record)->dataConsumerIs($dataConsumer)
+			)
+			->then
+				->mock($record)
+					->receive('dataConsumerIs')
+						->withIdenticalArguments($dataConsumer)
+							->once
 		;
 	}
 
@@ -47,23 +55,18 @@ class rfc4180 extends units\test
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer,
-				$this->calling($record = new csv\record)
-					->useSeparatorAndEolAndEscaper = $recordUsingRfc4180SeparatorEolAndEscaper = new csv\record
+				$record = new csv\record
 			)
-
 			->if(
-				$this->newTestedInstance($dataConsumer)
+				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
+				->object($this->testedInstance->newCsvRecord($record))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 				->mock($record)
 					->receive('useSeparatorAndEolAndEscaper')
 						->withArguments(new record\separator, new record\eol, new record\escaper)
-							->once
-				->mock($recordUsingRfc4180SeparatorEolAndEscaper)
-					->receive('dataConsumerIs')
-						->withArguments($dataConsumer)
 							->once
 		;
 	}
