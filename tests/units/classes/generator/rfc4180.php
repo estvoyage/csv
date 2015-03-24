@@ -8,7 +8,7 @@ use
 	estvoyage\csv\tests\units,
 	estvoyage\csv\record,
 	estvoyage\data,
-	mock\estvoyage\csv,
+	mock\estvoyage\csv as mockOfCsv,
 	mock\estvoyage\data as mockOfData
 ;
 
@@ -19,6 +19,28 @@ class rfc4180 extends units\test
 		$this->testedClass
 			->isFinal
 			->implements('estvoyage\csv\generator')
+		;
+	}
+
+	function testNewCsvRecord()
+	{
+		$this
+			->given(
+				$this->calling($record = new mockOfCsv\record)->useSeparatorAndEolAndEscaper = $recordWithSeparatorEolAndEscaper = new mockOfCsv\record
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
+				->mock($record)
+					->receive('useSeparatorAndEolAndEscaper')
+						->withArguments(new record\separator, new record\eol, new record\escaper)
+							->once
+				->mock($recordWithSeparatorEolAndEscaper)
+					->receive('dataConsumerIs')
+						->withArguments(new data\data\buffer)
+							->once
 		;
 	}
 
@@ -35,38 +57,26 @@ class rfc4180 extends units\test
 				->object($this->testedInstance->dataConsumerIs($dataConsumer))
 					->isTestedInstance
 				->mock($dataConsumer)
-					->didNotReceiveAnyMessage()
-
-			->given(
-				$this->calling($record = new csv\record)->useSeparatorAndEolAndEscaper = $record
-			)
-			->if(
-				$this->testedInstance->newCsvRecord($record)->dataConsumerIs($dataConsumer)
-			)
-			->then
-				->mock($record)
-					->receive('dataConsumerIs')
-						->withIdenticalArguments($dataConsumer)
+					->receive('dataProviderIs')
+						->withArguments(new data\data\buffer)
 							->once
-		;
-	}
 
-	function testNewCsvRecord()
-	{
-		$this
 			->given(
-				$record = new csv\record
+				$this->calling($record = new mockOfCsv\record)->useSeparatorAndEolAndEscaper = $recordWithSeparatorEolAndEscaper = new mockOfCsv\record,
+				$this->calling($recordWithSeparatorEolAndEscaper)->dataConsumerIs = function($dataConsumer) use (& $recordData) {
+					$dataConsumer->newData($recordData = new data\data(uniqid()));
+				}
 			)
 			->if(
-				$this->newTestedInstance
+				$this->testedInstance
+					->newCsvRecord($record)
+						->dataConsumerIs($dataConsumer)
+							->dataConsumerIs($dataConsumer)
 			)
 			->then
-				->object($this->testedInstance->newCsvRecord($record))
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->mock($record)
-					->receive('useSeparatorAndEolAndEscaper')
-						->withArguments(new record\separator, new record\eol, new record\escaper)
+				->mock($dataConsumer)
+					->receive('dataProviderIs')
+						->withArguments((new data\data\buffer)->newData($recordData))
 							->once
 		;
 	}

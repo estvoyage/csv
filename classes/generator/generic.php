@@ -12,7 +12,7 @@ use
 abstract class generic implements csv\generator
 {
 	private
-		$records = [],
+		$buffer,
 		$separator,
 		$eol,
 		$escaper
@@ -20,6 +20,7 @@ abstract class generic implements csv\generator
 
 	function __construct(record\separator $separator, record\eol $eol, record\escaper $escaper)
 	{
+		$this->buffer = new data\data\buffer;
 		$this->separator = $separator;
 		$this->eol = $eol;
 		$this->escaper = $escaper;
@@ -27,24 +28,23 @@ abstract class generic implements csv\generator
 
 	function newCsvRecord(csv\record $record)
 	{
-		$csv = clone $this;
-		$csv->records[] = $record
+		$record
 			->useSeparatorAndEolAndEscaper(
 				$this->separator,
 				$this->eol,
 				$this->escaper
 			)
+			->dataConsumerIs($this->buffer)
 		;
 
-		return $csv;
+		return $this;
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
 	{
-		foreach ($this->records as $record)
-		{
-			$record->dataConsumerIs($dataConsumer);
-		}
+		$dataConsumer->dataProviderIs($this->buffer);
+
+		$this->buffer = new data\data\buffer;
 
 		return $this;
 	}
