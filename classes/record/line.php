@@ -8,7 +8,7 @@ use
 	estvoyage\csv\record
 ;
 
-final class line implements csv\record, data\provider
+final class line implements csv\record
 {
 	private
 		$data = [],
@@ -37,6 +37,16 @@ final class line implements csv\record, data\provider
 		$line->data[] = $data;
 
 		return $line;
+	}
+
+	function dataNeedByCsvRecord(record $record)
+	{
+		foreach ($this->data as $data)
+		{
+			$record = $record->newData($data);
+		}
+
+		return $record;
 	}
 
 	function useSeparatorAndEolAndEscaper(record\separator $separator, record\eol $eol, record\escaper $escaper)

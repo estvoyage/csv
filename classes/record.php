@@ -6,7 +6,7 @@ use
 	estvoyage\data
 ;
 
-interface record
+interface record extends data\provider
 {
 	function useSeparatorAndEolAndEscaper(record\separator $separator, record\eol $eol, record\escaper $escaper);
 	function dataConsumerIs(data\consumer $dataConsumer);
