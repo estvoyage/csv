@@ -26,20 +26,16 @@ class rfc4180 extends units\test
 	{
 		$this
 			->given(
-				$this->calling($record = new mockOfCsv\record)->useSeparatorAndEolAndEscaper = $recordWithSeparatorEolAndEscaper = new mockOfCsv\record
+				$csvRecord = new mockOfCsv\record
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
-				->mock($record)
-					->receive('useSeparatorAndEolAndEscaper')
-						->withArguments(new record\separator, new record\eol, new record\escaper)
-							->once
-				->mock($recordWithSeparatorEolAndEscaper)
-					->receive('dataConsumerIs')
-						->withArguments(new data\data\buffer)
+				->object($this->testedInstance->newCsvRecord($csvRecord))->isTestedInstance
+				->mock($csvRecord)
+					->receive('csvRecordTemplateIs')
+						->withArguments(new record\template\rfc4180)
 							->once
 		;
 	}
@@ -58,25 +54,7 @@ class rfc4180 extends units\test
 					->isTestedInstance
 				->mock($dataConsumer)
 					->receive('dataProviderIs')
-						->withArguments(new data\data\buffer)
-							->once
-
-			->given(
-				$this->calling($record = new mockOfCsv\record)->useSeparatorAndEolAndEscaper = $recordWithSeparatorEolAndEscaper = new mockOfCsv\record,
-				$this->calling($recordWithSeparatorEolAndEscaper)->dataConsumerIs = function($dataConsumer) use (& $recordData) {
-					$dataConsumer->newData($recordData = new data\data(uniqid()));
-				}
-			)
-			->if(
-				$this->testedInstance
-					->newCsvRecord($record)
-						->dataConsumerIs($dataConsumer)
-							->dataConsumerIs($dataConsumer)
-			)
-			->then
-				->mock($dataConsumer)
-					->receive('dataProviderIs')
-						->withArguments((new data\data\buffer)->newData($recordData))
+						->withArguments(new record\template\rfc4180)
 							->once
 		;
 	}

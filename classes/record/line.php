@@ -39,24 +39,14 @@ final class line implements csv\record
 		return $line;
 	}
 
-	function useSeparatorAndEolAndEscaper(record\separator $separator, record\eol $eol, record\escaper $escaper)
+	function csvRecordTemplateIs(template $template)
 	{
-		switch (true)
+		foreach ($this->data as $data)
 		{
-			case $separator != $this->separator:
-			case $escaper != $this->escaper:
-			case $eol != $this->eol:
-				$record = new self;
-				$record->data = $this->data;
-				$record->separator = $separator;
-				$record->eol = $eol;
-				$record->escaper = $eol;
-
-				return $record;
-
-			default:
-				return $this;
+			$template->newData($data);
 		}
+
+		return $this;
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
@@ -64,26 +54,28 @@ final class line implements csv\record
 		$separator = (string) $this->separator;
 		$eol = (string) $this->eol;
 		$escaper = (string) $this->escaper;
+		$data = '';
 
 		for ($column = 0, $lastColumn = sizeof($this->data) - 1; $column <= $lastColumn; $column++)
 		{
-			$data = (string) $this->data[$column];
+			$columnValue = (string) $this->data[$column];
 
 			switch (true)
 			{
-				case strpos($data, $eol) !== false:
-				case strpos($data, $separator) !== false:
-					if (strpos($data, $escaper) !== false)
+				case strpos($columnValue, $eol) !== false:
+				case strpos($columnValue, $separator) !== false:
+					if (strpos($columnValue, $escaper) !== false)
 					{
-						$data = str_replace($escaper, $escaper . $escaper, $data);
+						$columnValue = str_replace($escaper, $escaper . $escaper, $columnValue);
 					}
 
-					$data = $escaper . $data . $escaper;
-					break;
+					$columnValue = $escaper . $columnValue . $escaper;
 			}
 
-			$dataConsumer->newData(new data\data($data . ($column < $lastColumn ? $separator : $eol)));
+			$data .= $columnValue . ($column < $lastColumn ? $separator : $eol);
 		}
+
+		$dataConsumer->newData(new data\data($data));
 
 		return $this;
 	}
