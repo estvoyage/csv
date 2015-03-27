@@ -9,4 +9,5 @@ use
 interface template
 {
 	function newData(data\data $data);
+	function noMoreData();
 }

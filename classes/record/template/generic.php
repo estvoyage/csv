@@ -37,8 +37,6 @@ abstract class generic implements data\provider, csv\record\template
 	{
 		$record->csvRecordTemplateIs($this);
 
-		$this->data .= $this->eol;
-
 		return $this;
 	}
 
@@ -57,6 +55,16 @@ abstract class generic implements data\provider, csv\record\template
 		}
 
 		$this->data .= (! $this->data ? '' : $this->separator) . $data;
+
+		return $this;
+	}
+
+	function noMoreData()
+	{
+		if ($this->data)
+		{
+			$this->data .= $this->eol;
+		}
 
 		return $this;
 	}

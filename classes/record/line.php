@@ -41,9 +41,14 @@ final class line implements csv\record
 
 	function csvRecordTemplateIs(template $template)
 	{
-		foreach ($this->data as $data)
+		if ($this->data)
 		{
-			$template->newData($data);
+			foreach ($this->data as $data)
+			{
+				$template->newData($data);
+			}
+
+			$template->noMoreData();
 		}
 
 		return $this;

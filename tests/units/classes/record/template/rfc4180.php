@@ -68,6 +68,7 @@ class rfc4180 extends units\test
 						->newData($data1)
 						->newData($data2)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -90,6 +91,7 @@ class rfc4180 extends units\test
 						->newData($data1)
 						->newData($dataWithSeparator)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -111,6 +113,7 @@ class rfc4180 extends units\test
 						->newData($data1)
 						->newData($dataWithEol)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -132,6 +135,7 @@ class rfc4180 extends units\test
 						->newData($data1)
 						->newData($dataWithSeparatorAndEscaper)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)

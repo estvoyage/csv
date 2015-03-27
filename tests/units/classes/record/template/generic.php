@@ -23,24 +23,6 @@ class generic extends units\test
 		;
 	}
 
-	function testNewCsvRecord()
-	{
-		$this
-			->given(
-				$record = new mockOfCsv\record
-			)
-			->if(
-				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
-			)
-			->then
-				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
-				->mock($record)
-					->receive('csvRecordTemplateIs')
-						->withArguments($this->testedInstance)
-							->once
-		;
-	}
-
 	function testDataConsumerIs()
 	{
 		$this
@@ -69,6 +51,7 @@ class generic extends units\test
 						->newData($data1)
 						->newData($data2)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -91,6 +74,7 @@ class generic extends units\test
 						->newData($data1)
 						->newData($dataWithSeparator)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -112,6 +96,7 @@ class generic extends units\test
 						->newData($data1)
 						->newData($dataWithEol)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -133,6 +118,7 @@ class generic extends units\test
 						->newData($data1)
 						->newData($dataWithSeparatorAndEscaper)
 						->newData($data3)
+						->noMoreData()
 					;
 				}
 			)
@@ -145,6 +131,61 @@ class generic extends units\test
 				->mock($dataConsumer)
 					->receive('newData')
 						->withArguments(new data\data($data1 . $separator . $escaper . $dataBeforeEscaper . $escaper . $escaper . $dataBetweenEscaperAndSeparator . $separator . $dataAfterSeparator . $escaper . $separator . $data3 . $eol))
+							->once
+		;
+	}
+
+	function testNewCsvRecord()
+	{
+		$this
+			->given(
+				$record = new mockOfCsv\record
+			)
+			->if(
+				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
+			)
+			->then
+				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
+				->mock($record)
+					->receive('csvRecordTemplateIs')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testNewData()
+	{
+		$this
+			->given(
+				$data = new data\data(uniqid())
+			)
+			->if(
+				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
+			)
+			->then
+				->object($this->testedInstance->newData($data))->isTestedInstance
+		;
+	}
+
+	function testNoMoreData()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer
+			)
+			->if(
+				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
+			)
+			->then
+				->object($this->testedInstance->noMoreData())->isTestedInstance
+
+			->if(
+				$this->testedInstance->dataConsumerIs($dataConsumer)
+			)
+			->then
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(new data\data)
 							->once
 		;
 	}

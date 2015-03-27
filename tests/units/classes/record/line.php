@@ -48,6 +48,8 @@ class line extends units\test
 				$csvRecordTemplate = new mockOfCsv\record\template
 			)
 			->if(
+				$this->calling($csvRecordTemplate)->newData = function($data) use (& $record) { $record .= $data; },
+				$this->calling($csvRecordTemplate)->noMoreData = function() use (& $record) { $record .= PHP_EOL; },
 				$this->newTestedInstance
 			)
 			->then
@@ -63,14 +65,7 @@ class line extends units\test
 						->csvRecordTemplateIs($csvRecordTemplate)
 			)
 			->then
-				->mock($csvRecordTemplate)
-					->receive('newData')
-						->withArguments($data1)
-							->once
-						->withArguments($data2)
-							->once
-						->withArguments($data3)
-							->once
+				->string($record)->isEqualTo($data1 . $data2 . $data3 . PHP_EOL)
 		;
 	}
 }
