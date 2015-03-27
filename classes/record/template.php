@@ -8,6 +8,5 @@ use
 
 interface template
 {
-	function newData(data\data $data);
-	function noMoreData();
+	function newData(data\data... $data);
 }

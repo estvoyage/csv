@@ -40,27 +40,27 @@ abstract class generic implements data\provider, csv\record\template
 		return $this;
 	}
 
-	function newData(data\data $data)
+	function newData(data\data... $columns)
 	{
-		switch (true)
+		foreach ($columns as $column)
 		{
-			case strpos($data, $this->eol) !== false:
-			case strpos($data, $this->separator) !== false:
-				if (strpos($data, $this->escaper) !== false)
-				{
-					$data = str_replace($this->escaper, $this->escaper . $this->escaper, $data);
-				}
+			$column = (string) $column;
 
-				$data = $this->escaper . $data . $this->escaper;
+			switch (true)
+			{
+				case strpos($column, $this->eol) !== false:
+				case strpos($column, $this->separator) !== false:
+					if (strpos($column, $this->escaper) !== false)
+					{
+						$column = str_replace($this->escaper, $this->escaper . $this->escaper, $column);
+					}
+
+					$column = $this->escaper . $column . $this->escaper;
+			}
+
+			$this->data .= (! $this->data ? '' : $this->separator) . $column;
 		}
 
-		$this->data .= (! $this->data ? '' : $this->separator) . $data;
-
-		return $this;
-	}
-
-	function noMoreData()
-	{
 		if ($this->data)
 		{
 			$this->data .= $this->eol;

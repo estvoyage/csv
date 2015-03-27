@@ -45,19 +45,11 @@ class generic extends units\test
 			->given(
 				$data1 = new data\data(uniqid()),
 				$data2 = new data\data(uniqid()),
-				$data3 = new data\data(uniqid()),
-				$this->calling($record = new mockOfCsv\record)->csvRecordTemplateIs = function($template) use ($data1, $data2, $data3) {
-					$template
-						->newData($data1)
-						->newData($data2)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$data3 = new data\data(uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
+					->newData($data1, $data2, $data3)
 						->dataConsumerIs($dataConsumer)
 							->dataConsumerIs($dataConsumer)
 			)
@@ -68,20 +60,12 @@ class generic extends units\test
 							->once
 
 			->given(
-				$dataWithSeparator = new data\data(uniqid() . $separator . uniqid()),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithSeparator, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithSeparator)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithSeparator = new data\data(uniqid() . $separator . uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithSeparator, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
@@ -90,20 +74,12 @@ class generic extends units\test
 							->once
 
 			->given(
-				$dataWithEol = new data\data(uniqid() . $eol . uniqid()),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithEol, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithEol)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithEol = new data\data(uniqid() . $eol . uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithEol, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
@@ -112,43 +88,17 @@ class generic extends units\test
 							->once
 
 			->given(
-				$dataWithSeparatorAndEscaper = new data\data(($dataBeforeEscaper = new data\data(uniqid())) . $escaper . ($dataBetweenEscaperAndSeparator = new data\data(uniqid())) . $separator . ($dataAfterSeparator = uniqid())),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithSeparatorAndEscaper, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithSeparatorAndEscaper)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithSeparatorAndEscaper = new data\data(($dataBeforeEscaper = new data\data(uniqid())) . $escaper . ($dataBetweenEscaperAndSeparator = new data\data(uniqid())) . $separator . ($dataAfterSeparator = uniqid()))
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithSeparatorAndEscaper, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
 					->receive('newData')
 						->withArguments(new data\data($data1 . $separator . $escaper . $dataBeforeEscaper . $escaper . $escaper . $dataBetweenEscaperAndSeparator . $separator . $dataAfterSeparator . $escaper . $separator . $data3 . $eol))
-							->once
-		;
-	}
-
-	function testNewCsvRecord()
-	{
-		$this
-			->given(
-				$record = new mockOfCsv\record
-			)
-			->if(
-				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
-			)
-			->then
-				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
-				->mock($record)
-					->receive('csvRecordTemplateIs')
-						->withArguments($this->testedInstance)
 							->once
 		;
 	}
@@ -167,25 +117,20 @@ class generic extends units\test
 		;
 	}
 
-	function testNoMoreData()
+	function testNewCsvRecord()
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer
+				$record = new mockOfCsv\record
 			)
 			->if(
 				$this->newTestedInstance(new record\separator, new record\escaper, new record\eol)
 			)
 			->then
-				->object($this->testedInstance->noMoreData())->isTestedInstance
-
-			->if(
-				$this->testedInstance->dataConsumerIs($dataConsumer)
-			)
-			->then
-				->mock($dataConsumer)
-					->receive('newData')
-						->withArguments(new data\data)
+				->object($this->testedInstance->newCsvRecord($record))->isTestedInstance
+				->mock($record)
+					->receive('csvRecordTemplateIs')
+						->withArguments($this->testedInstance)
 							->once
 		;
 	}

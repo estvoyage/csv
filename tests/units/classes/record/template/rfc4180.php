@@ -62,19 +62,11 @@ class rfc4180 extends units\test
 			->given(
 				$data1 = new data\data(uniqid()),
 				$data2 = new data\data(uniqid()),
-				$data3 = new data\data(uniqid()),
-				$this->calling($record = new mockOfCsv\record)->csvRecordTemplateIs = function($template) use ($data1, $data2, $data3) {
-					$template
-						->newData($data1)
-						->newData($data2)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$data3 = new data\data(uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
+					->newData($data1, $data2, $data3)
 						->dataConsumerIs($dataConsumer)
 							->dataConsumerIs($dataConsumer)
 			)
@@ -85,20 +77,12 @@ class rfc4180 extends units\test
 							->once
 
 			->given(
-				$dataWithSeparator = new data\data(uniqid() . $separator . uniqid()),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithSeparator, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithSeparator)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithSeparator = new data\data(uniqid() . $separator . uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithSeparator, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
@@ -107,20 +91,12 @@ class rfc4180 extends units\test
 							->once
 
 			->given(
-				$dataWithEol = new data\data(uniqid() . $eol . uniqid()),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithEol, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithEol)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithEol = new data\data(uniqid() . $eol . uniqid())
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithEol, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
@@ -129,20 +105,12 @@ class rfc4180 extends units\test
 							->once
 
 			->given(
-				$dataWithSeparatorAndEscaper = new data\data(($dataBeforeEscaper = new data\data(uniqid())) . $escaper . ($dataBetweenEscaperAndSeparator = new data\data(uniqid())) . $separator . ($dataAfterSeparator = uniqid())),
-				$this->calling($record)->csvRecordTemplateIs = function($template) use ($data1, $dataWithSeparatorAndEscaper, $data3) {
-					$template
-						->newData($data1)
-						->newData($dataWithSeparatorAndEscaper)
-						->newData($data3)
-						->noMoreData()
-					;
-				}
+				$dataWithSeparatorAndEscaper = new data\data(($dataBeforeEscaper = new data\data(uniqid())) . $escaper . ($dataBetweenEscaperAndSeparator = new data\data(uniqid())) . $separator . ($dataAfterSeparator = uniqid()))
 			)
 			->if(
 				$this->testedInstance
-					->newCsvRecord($record)
-							->dataConsumerIs($dataConsumer)
+					->newData($data1, $dataWithSeparatorAndEscaper, $data3)
+						->dataConsumerIs($dataConsumer)
 			)
 			->then
 				->mock($dataConsumer)
